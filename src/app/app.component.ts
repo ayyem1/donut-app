@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
       <header class="header">
         <img src="/assets/img/logo.svg" alt="Ultimate Donuts" class="logo"/>
       </header>
-      <donut-list></donut-list>
+      <donut-single></donut-single>
     </div>
   `,
   styles: [
@@ -21,7 +21,7 @@ import { Component, OnInit } from '@angular/core';
         padding: 25px;
         border: 4px solid #ef9fc7;
       }
-      
+
       .header {
         display: flex;
         justify-content: center;
