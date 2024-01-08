@@ -6,33 +6,33 @@ import { Component, OnInit } from '@angular/core';
     <form class="donut-form" #form="ngForm">
       <label>
         <span>Name</span>
-        <input type="text" name="name" class="input" ngModel />
+        <input type="text" name="name" class="input" required ngModel #name="ngModel"/>
       </label>
       <label>
         <span>Price</span>
-        <input type="number" name="price" class="input" ngModel />
+        <input type="number" name="price" class="input" required ngModel />
       </label>
       <div class="donut-form-radios">
         <p class="donut-form-radios-label">Promo:</p>
         <label>
-          <input type="radio" name="promo" [value]="undefined" ngModel/>
+          <input type="radio" name="promo" required [value]="undefined" ngModel/>
           <span>None</span>
         </label>
         <label>
-          <input type="radio" name="promo" value="new" ngModel/>
+          <input type="radio" name="promo" required value="new" ngModel/>
           <span>New</span>
         </label>
         <label>
-          <input type="radio" name="promo" value="limited" ngModel/>
+          <input type="radio" name="promo" required value="limited" ngModel/>
           <span>Limited</span>
         </label>
       </div>
-      <select name="icon" class="input input--select" ngModel>
+      <select name="icon" class="input input--select" required ngModel>
         <option *ngFor="let icon of icons" [ngValue]="icon">{{ icon }}</option>
       </select>
       <label>
         <span>Description</span>
-        <textarea name="description" class="input input--textarea" ngModel>
+        <textarea name="description" class="input input--textarea" required ngModel>
         </textarea>
       </label>
       <pre>{{ form.value | json }}</pre>
