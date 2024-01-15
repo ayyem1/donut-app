@@ -1,12 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'donut-form',
   template: `
-    <form class="donut-form" #form="ngForm">
+    <form class="donut-form" #form="ngForm" (ngSubmit)="handleSubmit(form)">
       <label>
         <span>Name</span>
-        <input type="text" name="name" class="input" required ngModel #name="ngModel"/>
+        <input
+          type="text"
+          name="name"
+          class="input"
+          required
+          minlength="5"
+          ngModel
+          #name="ngModel"
+        />
+        <ng-container *ngIf="name.invalid && name.touched">
+          <div class="donut-form-error" *ngIf="name.errors?.required">
+            Name is required
+          </div>
+          <div class="donut-form-error" *ngIf="name.errors?.minlength">
+            Min length of name is 5!
+          </div>
+        </ng-container>
       </label>
       <label>
         <span>Price</span>
@@ -15,15 +32,21 @@ import { Component, OnInit } from '@angular/core';
       <div class="donut-form-radios">
         <p class="donut-form-radios-label">Promo:</p>
         <label>
-          <input type="radio" name="promo" required [value]="undefined" ngModel/>
+          <input
+            type="radio"
+            name="promo"
+            required
+            [value]="undefined"
+            ngModel
+          />
           <span>None</span>
         </label>
         <label>
-          <input type="radio" name="promo" required value="new" ngModel/>
+          <input type="radio" name="promo" required value="new" ngModel />
           <span>New</span>
         </label>
         <label>
-          <input type="radio" name="promo" required value="limited" ngModel/>
+          <input type="radio" name="promo" required value="limited" ngModel />
           <span>Limited</span>
         </label>
       </div>
@@ -32,9 +55,15 @@ import { Component, OnInit } from '@angular/core';
       </select>
       <label>
         <span>Description</span>
-        <textarea name="description" class="input input--textarea" required ngModel>
+        <textarea
+          name="description"
+          class="input input--textarea"
+          required
+          ngModel
+        >
         </textarea>
       </label>
+      <button type="submit" class="btn btn--green">Create</button>
       <pre>{{ form.value | json }}</pre>
     </form>
   `,
@@ -56,13 +85,15 @@ import { Component, OnInit } from '@angular/core';
             }
           }
         }
+        &-error {
+          font-size: 12px;
+          color: #e66262;
+        }
       }
-
     `,
-  ]
+  ],
 })
-export class DonutFormComponent implements OnInit{
-
+export class DonutFormComponent {
   icons: string[] = [
     'caramel-split',
     'glazed-fudge',
@@ -70,8 +101,10 @@ export class DonutFormComponent implements OnInit{
     'sour-supreme',
     'strawberry-glaze',
     'vanilla-sundae',
-    'zesty-lemon'
-  ]
+    'zesty-lemon',
+  ];
 
-  ngOnInit(): void {}
+  constructor() {}
+
+  handleSubmit(form: NgForm) {}
 }
