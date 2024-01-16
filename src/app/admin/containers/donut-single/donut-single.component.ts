@@ -1,15 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Donut } from '../../models/donut.model';
 
 @Component({
   selector: 'donut-single',
   template: `
     <div>
-      <donut-form></donut-form>
+      <donut-form [donut]="donut" (create)="onCreate($event)"></donut-form>
     </div>
   `,
-  styles: [
-  ]
+  styles: [],
 })
-export class DonutSingleComponent {
+export class DonutSingleComponent implements OnInit {
+  donut!: Donut;
 
+  ngOnInit(): void {
+    this.donut = {
+      id: 'y8z0As',
+      name: 'Just Chocolate',
+      icon: 'just-chocolate',
+      price: 119,
+      promo: 'limited',
+      description: 'For the pure chocoholic.',
+    };
+  }
+  onCreate(donut: Donut) {
+    console.log('onCreate', donut);
+  }
 }
