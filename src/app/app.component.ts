@@ -5,9 +5,9 @@ import { Component, OnInit } from '@angular/core';
   template: `
     <div class="app">
       <header class="header">
-        <img src="/assets/img/logo.svg" alt="Ultimate Donuts" class="logo"/>
+        <img src="/assets/img/logo.svg" alt="Ultimate Donuts" class="logo" />
       </header>
-      <donut-single></donut-single>
+      <donut-list></donut-list>
     </div>
   `,
   styles: [
@@ -36,6 +36,5 @@ import { Component, OnInit } from '@angular/core';
   ],
 })
 export class AppComponent implements OnInit {
-
   ngOnInit(): void {}
 }
