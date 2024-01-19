@@ -5,7 +5,7 @@ import { Donut } from '../../models/donut.model';
 @Component({
   selector: 'donut-form',
   template: `
-    <form class="donut-form" #form="ngForm" (ngSubmit)="handleSubmit(form)">
+    <form class="donut-form" #form="ngForm">
       <label>
         <span>Name</span>
         <input
@@ -46,15 +46,30 @@ import { Donut } from '../../models/donut.model';
       <div class="donut-form-radios">
         <p class="donut-form-radios-label">Promo:</p>
         <label>
-          <input type="radio" name="promo" [value]="undefined" [ngModel]="donut.promo"/>
+          <input
+            type="radio"
+            name="promo"
+            [value]="undefined"
+            [ngModel]="donut.promo"
+          />
           <span>None</span>
         </label>
         <label>
-          <input type="radio" name="promo" value="new" [ngModel]="donut.promo"/>
+          <input
+            type="radio"
+            name="promo"
+            value="new"
+            [ngModel]="donut.promo"
+          />
           <span>New</span>
         </label>
         <label>
-          <input type="radio" name="promo" value="limited" [ngModel]="donut.promo"/>
+          <input
+            type="radio"
+            name="promo"
+            value="limited"
+            [ngModel]="donut.promo"
+          />
           <span>Limited</span>
         </label>
       </div>
@@ -88,8 +103,28 @@ import { Donut } from '../../models/donut.model';
           </div>
         </ng-container>
       </label>
-      <button type="submit" class="btn btn--green" [disabled]="form.invalid">
+      <button
+        type="button"
+        class="btn btn--green"
+        [disabled]="form.invalid"
+        (click)="handleCreate(form)"
+      >
         Create
+      </button>
+      <button
+        type="button"
+        class="btn btn--green"
+        [disabled]="form.untouched"
+        (click)="handleUpdate(form)"
+      >
+        Update
+      </button>
+      <button
+        type="button"
+        class="btn btn--green"
+        (click)="handleDelete(form)"
+      >
+        Delete
       </button>
       <button type="button" class="btn btn--grey" (click)="form.resetForm()">
         Reset Form
@@ -98,7 +133,7 @@ import { Donut } from '../../models/donut.model';
         Working...
       </div>
       <pre>{{ form.value | json }}</pre>
-      <pre>{{ donut| json }}</pre>
+      <pre>{{ donut | json }}</pre>
     </form>
   `,
   styles: [
@@ -134,7 +169,10 @@ import { Donut } from '../../models/donut.model';
 })
 export class DonutFormComponent {
   @Input() donut!: Donut;
+
   @Output() create = new EventEmitter<Donut>();
+  @Output() update = new EventEmitter<Donut>();
+  @Output() delete = new EventEmitter<Donut>();
 
   icons: string[] = [
     'caramel-split',
@@ -148,13 +186,32 @@ export class DonutFormComponent {
 
   constructor() {}
 
-  handleSubmit(form: NgForm) {
+  handleCreate(form: NgForm) {
     if (form.invalid) {
       form.form.markAllAsTouched();
       return;
     }
 
     this.create.emit(form.value);
+  }
 
+  handleUpdate(form: NgForm) {
+    if (form.invalid) {
+      form.form.markAllAsTouched();
+      return;
+    }
+
+    this.update.emit({ id: this.donut.id, ...form.value });
+  }
+
+  handleDelete(form: NgForm) {
+    if (form.invalid) {
+      form.form.markAllAsTouched();
+      return;
+    }
+
+    if (confirm(`Really delete ${this.donut.name}?`)) {
+      this.delete.emit({ ...this.donut });
+    }
   }
 }
