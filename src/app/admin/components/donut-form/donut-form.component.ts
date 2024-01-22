@@ -5,7 +5,7 @@ import { Donut } from '../../models/donut.model';
 @Component({
   selector: 'donut-form',
   template: `
-    <form class="donut-form" #form="ngForm">
+    <form class="donut-form" #form="ngForm" *ngIf="donut; else loading">
       <label>
         <span>Name</span>
         <input
@@ -119,11 +119,7 @@ import { Donut } from '../../models/donut.model';
       >
         Update
       </button>
-      <button
-        type="button"
-        class="btn btn--green"
-        (click)="handleDelete(form)"
-      >
+      <button type="button" class="btn btn--green" (click)="handleDelete(form)">
         Delete
       </button>
       <button type="button" class="btn btn--grey" (click)="form.resetForm()">
@@ -135,6 +131,7 @@ import { Donut } from '../../models/donut.model';
       <pre>{{ form.value | json }}</pre>
       <pre>{{ donut | json }}</pre>
     </form>
+    <ng-template #loading>Loading...</ng-template>
   `,
   styles: [
     `

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { of, tap } from 'rxjs';
+import { map, of, tap } from 'rxjs';
 
 import { Donut } from '../models/donut.model';
 
@@ -63,34 +63,44 @@ export class DonutService {
     );
   }
 
-  // readOne(id: string): Donut {
-  //   const donut = this.read().find((donut: Donut) => donut.id === id);
-  //   if (donut) {
-  //     return donut;
-  //   }
+  readOne(id: string) {
+    return this.read().pipe(
+      map((donuts) => {
+        const donut = donuts.find((donut: Donut) => donut.id === id);
+        if (donut) {
+          return donut;
+        }
 
-  //   return {
-  //     name: '',
-  //     icon: '',
-  //     price: 0,
-  //     description: '',
-  //   };
-  // }
+        return {
+          name: '',
+          icon: '',
+          price: 0,
+          description: '',
+        };
+      })
+    );
+  }
 
   create(payload: Donut) {
-    this.donuts = [...this.donuts, payload];
-    console.log(this.donuts);
+    return this.http.post<Donut>(`/api/donuts`, payload).pipe(
+      tap((donut: Donut) => {
+        this.donuts = [...this.donuts, donut];
+      })
+    );
   }
 
   update(payload: Donut) {
-    this.donuts = this.donuts.map((donut: Donut) => {
-      if (donut.id === payload.id) {
-        return payload;
-      }
+    return this.http.put<Donut>(`/api/donuts/${payload.id}`, payload).pipe(
+      tap((updatedDonut: Donut) => {
+        this.donuts = this.donuts.map((donut: Donut) => {
+          if (donut.id === updatedDonut.id) {
+            return updatedDonut;
+          }
 
-      return donut;
-    });
-    console.log(this.donuts);
+          return donut;
+        });
+      })
+    );
   }
 
   delete(payload: Donut) {
