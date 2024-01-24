@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { map, of, tap } from 'rxjs';
+import { catchError, map, of, retry, tap, throwError } from 'rxjs';
 
 import { Donut } from '../models/donut.model';
 
@@ -9,45 +9,7 @@ import { Donut } from '../models/donut.model';
   providedIn: 'root',
 })
 export class DonutService {
-  private donuts: Donut[] = [
-    {
-      id: 'y8z0As',
-      name: 'Just Chocolate',
-      icon: 'just-chocolate',
-      price: 119,
-      promo: 'limited',
-      description: 'For the pure chocoholic.',
-    },
-    {
-      id: '3u98Kl',
-      name: 'Glazed Fudge',
-      icon: 'glazed-fudge',
-      price: 129,
-      promo: 'new',
-      description: 'Sticky perfection.',
-    },
-    {
-      id: 'ae098s',
-      name: 'Caramel Swirl',
-      icon: 'caramel-swirl',
-      price: 129,
-      description: 'Chocolate drizzled with caramel.',
-    },
-    {
-      id: '8amkZ9',
-      name: 'Sour Supreme',
-      icon: 'sour-supreme',
-      price: 139,
-      description: 'For the sour advocate.',
-    },
-    {
-      id: 'l3M0nz',
-      name: 'Zesty Lemon',
-      icon: 'zesty-lemon',
-      price: 129,
-      description: 'Delicious luscious lemon.',
-    },
-  ];
+  private donuts: Donut[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -59,7 +21,9 @@ export class DonutService {
     return this.http.get<Donut[]>(`/api/donuts`).pipe(
       tap((donuts) => {
         this.donuts = donuts;
-      })
+      }),
+      retry(2),
+      catchError(this.handleError)
     );
   }
 
@@ -85,7 +49,8 @@ export class DonutService {
     return this.http.post<Donut>(`/api/donuts`, payload).pipe(
       tap((donut: Donut) => {
         this.donuts = [...this.donuts, donut];
-      })
+      }),
+      catchError(this.handleError)
     );
   }
 
@@ -99,12 +64,29 @@ export class DonutService {
 
           return donut;
         });
-      })
+      }),
+      catchError(this.handleError)
     );
   }
 
   delete(payload: Donut) {
-    this.donuts = this.donuts.filter((donut: Donut) => donut.id != payload.id);
-    console.log(this.donuts);
+    return this.http.delete<Donut>(`/api/donuts/${payload.id}`).pipe(
+      tap(() => {
+        this.donuts = this.donuts.filter(
+          (donut: Donut) => donut.id != payload.id
+        );
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(err: HttpErrorResponse) {
+    if (err.error instanceof ErrorEvent) {
+      console.warn('Client: ', err.message);
+    } else {
+      console.warn('Server: ', err.status);
+    }
+
+    return throwError(() => new Error(err.message));
   }
 }
