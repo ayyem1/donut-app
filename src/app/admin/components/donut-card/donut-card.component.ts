@@ -4,8 +4,9 @@ import { Donut } from '../../models/donut.model';
 @Component({
   selector: 'donut-card',
   template: `
-    <div
+    <a
       class="donut-card"
+      [routerLink]="donut.id"
       [ngClass]="{
         'donut-card-promo': donut.promo
       }"
@@ -18,16 +19,18 @@ import { Donut } from '../../models/donut.model';
       <div>
         <p class="donut-card-name">
           {{ donut.name }}
-        <ng-container [ngSwitch]="donut.promo">
-          <span *ngSwitchCase="'new'" class="donut-card-label">NEW</span>
-          <span *ngSwitchCase="'limited'" class="donut-card-label">LIMITED</span>
-        </ng-container>
+          <ng-container [ngSwitch]="donut.promo">
+            <span *ngSwitchCase="'new'" class="donut-card-label">NEW</span>
+            <span *ngSwitchCase="'limited'" class="donut-card-label"
+              >LIMITED</span
+            >
+          </ng-container>
         </p>
         <p class="donut-card-price">
           {{ donut.price / 100 | currency }}
         </p>
       </div>
-    </div>
+    </a>
   `,
   styles: [
     `
@@ -53,12 +56,12 @@ import { Donut } from '../../models/donut.model';
         }
 
         &-label {
-           border: 1px solid #c14583;
-           border-radius: 4px;
-           padding: 0 4px;
-           margin-left: 5px;
-           font-size: 12px;
-           color: #c14583;
+          border: 1px solid #c14583;
+          border-radius: 4px;
+          padding: 0 4px;
+          margin-left: 5px;
+          font-size: 12px;
+          color: #c14583;
         }
 
         &-price {
@@ -70,8 +73,6 @@ import { Donut } from '../../models/donut.model';
           width: 50px;
           margin-right: 10px;
         }
-
-
       }
     `,
   ],

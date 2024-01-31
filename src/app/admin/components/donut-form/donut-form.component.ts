@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Donut } from '../../models/donut.model';
 
@@ -106,6 +106,7 @@ import { Donut } from '../../models/donut.model';
       <button
         type="button"
         class="btn btn--green"
+        *ngIf="!isEdit"
         [disabled]="form.invalid"
         (click)="handleCreate(form)"
       >
@@ -114,22 +115,31 @@ import { Donut } from '../../models/donut.model';
       <button
         type="button"
         class="btn btn--green"
+        *ngIf="isEdit"
         [disabled]="form.untouched"
         (click)="handleUpdate(form)"
       >
         Update
       </button>
-      <button type="button" class="btn btn--green" (click)="handleDelete(form)">
+      <button
+        type="button"
+        class="btn btn--green"
+        *ngIf="isEdit"
+        (click)="handleDelete(form)"
+      >
         Delete
       </button>
-      <button type="button" class="btn btn--grey" (click)="form.resetForm()">
+      <button
+        type="button"
+        class="btn btn--grey"
+        *ngIf="form.touched || isEdit"
+        (click)="form.resetForm()"
+      >
         Reset Form
       </button>
       <div class="donut-form-working" *ngIf="form.valid && form.submitted">
         Working...
       </div>
-      <pre>{{ form.value | json }}</pre>
-      <pre>{{ donut | json }}</pre>
     </form>
     <ng-template #loading>Loading...</ng-template>
   `,
@@ -166,6 +176,7 @@ import { Donut } from '../../models/donut.model';
 })
 export class DonutFormComponent {
   @Input() donut!: Donut;
+  @Input() isEdit!: boolean;
 
   @Output() create = new EventEmitter<Donut>();
   @Output() update = new EventEmitter<Donut>();
